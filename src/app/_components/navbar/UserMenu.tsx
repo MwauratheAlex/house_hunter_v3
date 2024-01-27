@@ -2,10 +2,15 @@
 import { AiOutlineMenu } from "react-icons/ai";
 import Avatar from "./Avatar";
 import { useCallback, useState } from "react";
-import MenuItem from "./MenuItem";
 import useRentModal from "~/app/hooks/useRentModal";
-import useRegisterModal from "~/app/hooks/useRegisterModal";
-import useLoginModal from "~/app/hooks/useLoginModal";
+
+import {
+  SignInButton,
+  SignOutButton,
+  SignUpButton,
+  SignedIn,
+  SignedOut,
+} from "@clerk/nextjs";
 
 const UserMenu = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -17,16 +22,6 @@ const UserMenu = () => {
   const onRent = useCallback(() => {
     rentModal.onOpen();
   }, [rentModal]);
-
-  const registerModal = useRegisterModal();
-  const onRegister = useCallback(() => {
-    registerModal.onOpen();
-  }, [registerModal]);
-
-  const loginModal = useLoginModal();
-  const onLogin = useCallback(() => {
-    loginModal.onOpen();
-  }, [loginModal]);
 
   return (
     <div className="relative">
@@ -54,8 +49,32 @@ const UserMenu = () => {
           className="absolute right-0 top-12
             w-[40vw] overflow-hidden rounded-xl bg-white text-sm shadow-md md:w-3/4"
         >
-          <MenuItem label="Login" onClick={onLogin} />
-          <MenuItem label="Signup" onClick={onRegister} />
+          <SignedIn>
+            <SignOutButton />
+          </SignedIn>
+          <SignedOut>
+            <div
+              className="flex cursor-pointer flex-col px-4 py-3
+              font-semibold transition "
+            >
+              <SignInButton mode="modal">
+                <div
+                  className="cursor-pointer px-4 py-3 font-semibold transition
+                  hover:bg-neutral-100"
+                >
+                  Sign in
+                </div>
+              </SignInButton>
+              <SignUpButton mode="modal">
+                <div
+                  className="cursor-pointer px-4 py-3 font-semibold transition
+                hover:bg-neutral-100"
+                >
+                  Sign up
+                </div>
+              </SignUpButton>
+            </div>
+          </SignedOut>
         </nav>
       )}
     </div>
