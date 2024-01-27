@@ -10,6 +10,8 @@ import Link from "next/link";
 
 import { CreatePost } from "~/app/_components/create-post";
 import { api } from "~/trpc/server";
+import Container from "./_components/Container";
+import ListingCard from "./_components/ListingCard";
 
 export default async function Home() {
   noStore();
@@ -17,15 +19,16 @@ export default async function Home() {
 
   return (
     <main>
-      <SignedIn>
-        <SignOutButton />
-      </SignedIn>
-      <SignedOut>
-        <SignInButton mode="modal">
-          <button className="btn">Sign in</button>
-        </SignInButton>
-        <SignUpButton mode="modal">Sign up</SignUpButton>
-      </SignedOut>
+      <Container>
+        <div
+          className="grid grid-cols-1 gap-8 pt-24 sm:grid-cols-2
+          md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6"
+        >
+          {new Array(24).fill(4).map((_, idx) => (
+            <ListingCard idx={idx + 1} key={idx} />
+          ))}
+        </div>
+      </Container>
     </main>
   );
 }

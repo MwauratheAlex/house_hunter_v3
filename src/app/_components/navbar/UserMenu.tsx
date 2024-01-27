@@ -10,9 +10,12 @@ import {
   SignUpButton,
   SignedIn,
   SignedOut,
+  useUser,
 } from "@clerk/nextjs";
+import toast from "react-hot-toast";
 
 const UserMenu = () => {
+  const user = useUser();
   const [isOpen, setIsOpen] = useState(false);
   const toggleOpen = useCallback(() => {
     setIsOpen((value) => !value);
@@ -20,19 +23,33 @@ const UserMenu = () => {
 
   const rentModal = useRentModal();
   const onRent = useCallback(() => {
+    // if (!user.isSignedIn) {
+    //   toast.error("Please sign in to list your property");
+    // }
     rentModal.onOpen();
   }, [rentModal]);
 
   return (
     <div className="relative">
       <div className="flex items-center gap-3">
-        <div
-          onClick={onRent}
-          className=" cursor-pointer rounded-full px-4
+        <SignedIn>
+          <div
+            onClick={onRent}
+            className=" cursor-pointer rounded-full px-4
             py-3 text-sm font-semibold transition hover:bg-neutral-100"
-        >
-          List your property
-        </div>
+          >
+            List your property
+          </div>
+        </SignedIn>
+        <SignedOut>
+          <div
+            onClick={() => toast.error("Please sign in to list your property")}
+            className=" cursor-pointer rounded-full px-4
+            py-3 text-sm font-semibold transition hover:bg-neutral-100"
+          >
+            List your property
+          </div>
+        </SignedOut>
         <div
           className="flex cursor-pointer items-center gap-3 rounded-full 
             border border-neutral-200 p-4 transition hover:shadow-md md:px-2 md:py-1"
@@ -50,7 +67,14 @@ const UserMenu = () => {
             w-[40vw] overflow-hidden rounded-xl bg-white text-sm shadow-md md:w-3/4"
         >
           <SignedIn>
-            <SignOutButton />
+            <SignOutButton>
+              <div
+                className="cursor-pointer px-4 py-3 font-semibold transition
+                  hover:bg-neutral-100"
+              >
+                Sign out
+              </div>
+            </SignOutButton>
           </SignedIn>
           <SignedOut>
             <div

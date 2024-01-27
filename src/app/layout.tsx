@@ -3,11 +3,9 @@ import "~/styles/globals.css";
 import { Inter } from "next/font/google";
 
 import { TRPCReactProvider } from "~/trpc/react";
-import { ClerkProvider } from "@clerk/nextjs";
+import { ClerkProvider, SignedIn } from "@clerk/nextjs";
 import Navbar from "./_components/navbar/Navbar";
 import RentModal from "./_components/modals/RentModal";
-import LoginModal from "./_components/modals/LoginModal";
-import RegisterModal from "./_components/modals/RegisterModal";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -31,9 +29,9 @@ export default function RootLayout({
         <body className={`font-sans ${inter.variable}`}>
           <TRPCReactProvider>
             <Navbar />
-            <RentModal />
-            <LoginModal />
-            <RegisterModal />
+            <SignedIn>
+              <RentModal />
+            </SignedIn>
             <div className="">{children}</div>
           </TRPCReactProvider>
         </body>
