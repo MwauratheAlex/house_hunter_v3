@@ -15,6 +15,7 @@ import Counter from "../Inputs/Counter";
 import CheckBox from "../Inputs/CheckBox";
 import { api } from "~/trpc/react";
 import { PropertyInputType } from "~/types";
+import { useUser } from "@clerk/nextjs";
 
 enum STEPS {
   CATEGORY = 0,
@@ -27,6 +28,7 @@ enum STEPS {
 }
 
 const RentModal = () => {
+  const { user } = useUser();
   const router = useRouter();
   const rentModal = useRentModal();
 
@@ -42,6 +44,7 @@ const RentModal = () => {
     setValue,
   } = useForm<PropertyInputType>({
     defaultValues: {
+      userId: user?.id,
       title: "",
       description: "",
       type: "",

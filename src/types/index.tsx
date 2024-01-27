@@ -1,6 +1,7 @@
 import { z } from "zod";
 
 export const PropertyInput = z.object({
+  userId: z.string(),
   title: z.string(),
   description: z.string(),
   imageSrc: z.string(),
