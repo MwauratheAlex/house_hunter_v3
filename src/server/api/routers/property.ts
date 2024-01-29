@@ -31,14 +31,6 @@ export const propertyRouter = createTRPCRouter({
       } = validatedInput.data;
       const propertyId = createId();
 
-      console.log(validatedInput.data);
-      amenities.map(async (amenity) => {
-        await ctx.db.insert(propertyAmenities).values({
-          propertyId: "",
-          amenityId: 0,
-        });
-      });
-
       await ctx.db.insert(properties).values({
         id: propertyId,
         title,
@@ -51,5 +43,14 @@ export const propertyRouter = createTRPCRouter({
         location,
         type,
       });
+
+      await Promise.all(
+        amenities.map(async (amenityId) => {
+          await ctx.db.insert(propertyAmenities).values({
+            propertyId,
+            amenityId,
+          });
+        }),
+      );
     }),
 });

@@ -79,7 +79,7 @@ const RentModal = () => {
     setStep((value) => value + 1);
   };
 
-  const createProject = api.property.create.useMutation({
+  const createProperty = api.property.create.useMutation({
     onSuccess: () => {
       reset();
       router.refresh();
@@ -91,12 +91,14 @@ const RentModal = () => {
     },
   });
 
-  const onSubmit = (data: any) => {
+  const onSubmit = (data: PropertyInputType) => {
     if (step !== STEPS.PRICE) return onNext();
 
     setIsLoading(true);
-    console.log(typeof data.price);
-    createProject.mutate(data);
+    if (user) {
+      data.userId = user.id;
+      createProperty.mutate(data);
+    }
   };
 
   const actionLabel = useMemo(() => {
@@ -172,7 +174,7 @@ const RentModal = () => {
             <SelectionBox
               icon={item.icon}
               label={item.label}
-              selected={category === item.label}
+              selected={category === item.value}
               value={item.value}
               onClick={(value) => setCustomValue("category", value)}
               iconSize={30}
@@ -196,7 +198,7 @@ const RentModal = () => {
               <SelectionBox
                 icon={item.icon}
                 label={item.label}
-                selected={housetype === item.label}
+                selected={housetype === item.value}
                 onClick={(value) => setCustomValue("type", value)}
                 iconSize={30}
                 value={item.value}

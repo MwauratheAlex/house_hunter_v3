@@ -1,6 +1,8 @@
 // Example model schema from the Drizzle docs
 // https://orm.drizzle.team/docs/sql-schema-declaration
 
+import { createId } from "@paralleldrive/cuid2";
+
 import { relations, sql } from "drizzle-orm";
 import {
   bigint,
@@ -9,6 +11,7 @@ import {
   json,
   mysqlEnum,
   mysqlTableCreator,
+  primaryKey,
   timestamp,
   varchar,
 } from "drizzle-orm/mysql-core";
@@ -62,7 +65,9 @@ export const propertyRelations = relations(properties, ({ one }) => ({
 }));
 
 export const amenities = createTable("amenity", {
-  id: bigint("id", { mode: "number" }).primaryKey().autoincrement(),
+  id: varchar("id", { length: 256 })
+    .primaryKey()
+    .$defaultFn(() => createId()),
   name: varchar("name", { length: 256 }),
   description: varchar("description", { length: 500 }),
   createdAt: timestamp("created_at")
@@ -71,15 +76,25 @@ export const amenities = createTable("amenity", {
   updatedAt: timestamp("updatedAt").onUpdateNow(),
 });
 
-export const propertyAmenities = createTable("propertyAmenity", {
-  id: bigint("id", { mode: "number" }).primaryKey().autoincrement(),
-  propertyId: varchar("id", { length: 255 }).notNull().primaryKey(),
-  amenityId: bigint("amenityId", { mode: "number" }).notNull(),
-  createdAt: timestamp("created_at")
-    .default(sql`CURRENT_TIMESTAMP`)
-    .notNull(),
-  updatedAt: timestamp("updatedAt").onUpdateNow(),
-});
+export const propertyAmenities = createTable(
+  "propertyAmenity",
+  {
+    propertyId: varchar("propertyId", { length: 255 }).notNull(),
+    amenityId: varchar("amenityId", { length: 256 }).notNull(),
+    createdAt: timestamp("created_at")
+      .default(sql`CURRENT_TIMESTAMP`)
+      .notNull(),
+    updatedAt: timestamp("updatedAt").onUpdateNow(),
+  },
+  (propertyAmenity) => ({
+    compoundKey: primaryKey({
+      columns: [propertyAmenity.propertyId, propertyAmenity.amenityId],
+    }),
+    propertyIdIdx: index("propertyAmenities_propertyId_idx").on(
+      propertyAmenity.propertyId,
+    ),
+  }),
+);
 
 export const propertyAmenitiesRelations = relations(
   propertyAmenities,
