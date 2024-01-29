@@ -10,9 +10,9 @@ export const PropertyInput = z.object({
     lng: z.number(),
   }),
   price: z.number(),
-  category: z.string(),
+  category: z.enum(["rent", "sale"]),
   roomCount: z.number(),
-  type: z.string(),
+  type: z.enum(["apartment", "house", "single-room", "bedsitter"]),
   amenities: z.array(z.string()),
 });
 

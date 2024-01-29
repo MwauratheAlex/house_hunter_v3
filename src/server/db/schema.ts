@@ -6,6 +6,8 @@ import {
   bigint,
   index,
   int,
+  json,
+  mysqlEnum,
   mysqlTableCreator,
   timestamp,
   varchar,
@@ -49,13 +51,17 @@ export const properties = createTable("property", {
   description: varchar("description", { length: 500 }),
   price: int("price").notNull(),
   roomCount: int("roomCount"),
+  category: mysqlEnum("category", ["rent", "sale"]).notNull(),
+  imageSrc: varchar("imgSrc", { length: 256 }).notNull(),
+  location: json("location").$type<{ lat: number; lng: number }>(),
+  type: mysqlEnum("type", ["apartment", "house", "single-room", "bedsitter"]),
 });
 
-export const PropertyRelations = relations(properties, ({ one }) => ({
+export const propertyRelations = relations(properties, ({ one }) => ({
   user: one(users, { fields: [properties.userId], references: [users.id] }),
 }));
 
-export const Amenities = createTable("amenity", {
+export const amenities = createTable("amenity", {
   id: bigint("id", { mode: "number" }).primaryKey().autoincrement(),
   name: varchar("name", { length: 256 }),
   description: varchar("description", { length: 500 }),
@@ -65,9 +71,9 @@ export const Amenities = createTable("amenity", {
   updatedAt: timestamp("updatedAt").onUpdateNow(),
 });
 
-export const PropertyAmenities = createTable("propertyAmenity", {
+export const propertyAmenities = createTable("propertyAmenity", {
   id: bigint("id", { mode: "number" }).primaryKey().autoincrement(),
-  propertyId: bigint("propertyId", { mode: "number" }).notNull(),
+  propertyId: varchar("id", { length: 255 }).notNull().primaryKey(),
   amenityId: bigint("amenityId", { mode: "number" }).notNull(),
   createdAt: timestamp("created_at")
     .default(sql`CURRENT_TIMESTAMP`)
@@ -75,16 +81,16 @@ export const PropertyAmenities = createTable("propertyAmenity", {
   updatedAt: timestamp("updatedAt").onUpdateNow(),
 });
 
-export const PropertyAmenitiesRelations = relations(
-  PropertyAmenities,
+export const propertyAmenitiesRelations = relations(
+  propertyAmenities,
   ({ one }) => ({
     property: one(properties, {
-      fields: [PropertyAmenities.propertyId],
+      fields: [propertyAmenities.propertyId],
       references: [properties.id],
     }),
-    amenity: one(Amenities, {
-      fields: [PropertyAmenities.amenityId],
-      references: [Amenities.id],
+    amenity: one(amenities, {
+      fields: [propertyAmenities.amenityId],
+      references: [amenities.id],
     }),
   }),
 );

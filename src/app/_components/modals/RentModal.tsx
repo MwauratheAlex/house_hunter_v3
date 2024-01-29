@@ -2,8 +2,8 @@
 import useRentModal from "~/app/hooks/useRentModal";
 import Modal from "./Modal";
 import { useRouter } from "next/navigation";
-import { useCallback, useMemo, useState } from "react";
-import { FieldValues, useForm } from "react-hook-form";
+import { useMemo, useState } from "react";
+import { useForm } from "react-hook-form";
 import Heading from "../Heading";
 import SelectionBox from "../Inputs/SelectionBox";
 import Map from "../Map";
@@ -47,11 +47,11 @@ const RentModal = () => {
       userId: user?.id,
       title: "",
       description: "",
-      type: "",
+      type: "apartment",
       imageSrc: "",
       location: undefined,
       price: 1,
-      category: "",
+      category: "rent",
       roomCount: 0,
       amenities: [],
     },
@@ -113,28 +113,34 @@ const RentModal = () => {
     {
       label: "Apartment",
       icon: "/images/apartment-icon.svg",
+      value: "apartment",
     },
     {
       label: "House",
       icon: "/images/house-icon2.svg",
+      value: "house",
     },
     {
       label: "Single Room",
       icon: "/images/single-icon.svg",
+      value: "single-room",
     },
     {
       label: "BedSitter",
       icon: "/images/studio-icon.svg",
+      value: "bedsitter",
     },
   ];
 
   const categories = [
     {
       label: "For Rent",
+      value: "rent",
       icon: "/images/rent-icon2.svg",
     },
     {
       label: "For Sale",
+      value: "sale",
       icon: "/images/sale-icon.svg",
     },
   ];
@@ -145,6 +151,10 @@ const RentModal = () => {
     { name: "Swimming Pool" },
     { name: "Balcony" },
   ];
+
+  const { data: amenityData, isLoading: amenitiesLoading } =
+    api.amenity.getAll.useQuery();
+  // console.log(data);
 
   const handleLocationSelection = (location: LatLng) => {
     setCustomValue("location", location);
@@ -163,6 +173,7 @@ const RentModal = () => {
               icon={item.icon}
               label={item.label}
               selected={category === item.label}
+              value={item.value}
               onClick={(value) => setCustomValue("category", value)}
               iconSize={30}
             />
@@ -188,6 +199,7 @@ const RentModal = () => {
                 selected={housetype === item.label}
                 onClick={(value) => setCustomValue("type", value)}
                 iconSize={30}
+                value={item.value}
               />
             </div>
           ))}
@@ -224,16 +236,17 @@ const RentModal = () => {
         />
         <Heading subtitle="Please select other amenities in your property." />
         <ul className="grid max-h-[50vh] grid-cols-1 gap-3 overflow-y-auto md:grid-cols-2">
-          {amenitiesArray.map((amenity) => (
-            <CheckBox
-              key={amenity.name}
-              id={amenity.name}
-              label={amenity.name}
-              value={amenity.name}
-              register={register}
-              group={"amenities"}
-            />
-          ))}
+          {amenityData &&
+            amenityData.map((amenity) => (
+              <CheckBox
+                key={amenity.name}
+                id={amenity.name || ""}
+                label={amenity.name || ""}
+                value={amenity.id.toString()}
+                register={register}
+                group={"amenities"}
+              />
+            ))}
         </ul>
       </div>
     );

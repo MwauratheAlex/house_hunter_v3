@@ -1,7 +1,7 @@
 import { PropertyInput } from "~/types";
 import { createTRPCRouter, publicProcedure } from "../trpc";
 import { TRPCError } from "@trpc/server";
-import { properties } from "~/server/db/schema";
+import { properties, propertyAmenities } from "~/server/db/schema";
 import { createId } from "@paralleldrive/cuid2";
 
 export const propertyRouter = createTRPCRouter({
@@ -31,13 +31,25 @@ export const propertyRouter = createTRPCRouter({
       } = validatedInput.data;
       const propertyId = createId();
 
-      ctx.db.insert(properties).values({
+      console.log(validatedInput.data);
+      amenities.map(async (amenity) => {
+        await ctx.db.insert(propertyAmenities).values({
+          propertyId: "",
+          amenityId: 0,
+        });
+      });
+
+      await ctx.db.insert(properties).values({
         id: propertyId,
         title,
         description,
         userId,
         price,
         roomCount,
+        category,
+        imageSrc,
+        location,
+        type,
       });
     }),
 });

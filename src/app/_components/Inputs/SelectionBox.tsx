@@ -7,6 +7,7 @@ type SelectionBoxProps = {
   selected?: boolean;
   icon?: string;
   iconSize?: number;
+  value: string;
 };
 
 const SelectionBox = (props: SelectionBoxProps) => {
@@ -17,7 +18,7 @@ const SelectionBox = (props: SelectionBoxProps) => {
         gap-3 rounded-xl border-2 p-4 transition hover:border-black
         ${props.selected ? "border-black" : " border-neutral-200"}
     `}
-      onClick={() => props.onClick(props.label)}
+      onClick={() => props.onClick(props.value)}
     >
       {props.icon && (
         <ImageIcon path={props.icon} size={props.iconSize || 28} />
