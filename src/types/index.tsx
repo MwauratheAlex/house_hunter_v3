@@ -1,3 +1,4 @@
+import { LatLng } from "use-places-autocomplete";
 import { z } from "zod";
 
 export const PropertyInput = z.object({
@@ -6,6 +7,7 @@ export const PropertyInput = z.object({
   description: z.string(),
   imageSrc: z.string(),
   location: z.object({
+    name: z.string(),
     lat: z.number(),
     lng: z.number(),
   }),
@@ -29,3 +31,9 @@ export const RegisterUserSchema = z.object({
 export type RegisterUserSchemaType = z.infer<typeof RegisterUserSchema>;
 
 export type RegisterUserSchemaKeys = keyof RegisterUserSchemaType;
+
+export interface ILocation {
+  name: string;
+  lat: number;
+  lng: number;
+}

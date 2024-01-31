@@ -5,10 +5,11 @@ import usePlacesAutocomplete, {
 } from "use-places-autocomplete";
 import { CiLocationOn } from "react-icons/ci";
 import { useState } from "react";
+import { ILocation } from "~/types";
 
 type LocationSelectProps = {
   value?: google.maps.places.AutocompletePrediction;
-  onChange: (selection: LatLng) => void;
+  onChange: (selection: ILocation) => void;
 };
 
 const LocationSelect = (props: LocationSelectProps) => {
@@ -29,7 +30,12 @@ const LocationSelect = (props: LocationSelectProps) => {
     clearSuggestions();
     getGeocode({ address: suggestion.description }).then((result) => {
       if (result[0]) {
-        const location = getLatLng(result[0]);
+        const latLng = getLatLng(result[0]);
+        const location = {
+          name: result[0].formatted_address,
+          lat: latLng.lat,
+          lng: latLng.lng,
+        };
         props.onChange(location);
       }
     });

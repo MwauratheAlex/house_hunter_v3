@@ -56,7 +56,9 @@ export const properties = createTable("property", {
   roomCount: int("roomCount").notNull(),
   category: mysqlEnum("category", ["rent", "sale"]).notNull(),
   imageSrc: varchar("imgSrc", { length: 256 }).notNull(),
-  location: json("location").$type<{ lat: number; lng: number }>().notNull(),
+  location: json("location")
+    .$type<{ name: string; lat: number; lng: number }>()
+    .notNull(),
   type: mysqlEnum("type", [
     "apartment",
     "house",

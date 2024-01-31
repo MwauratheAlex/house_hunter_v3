@@ -14,7 +14,7 @@ import ImageUpload from "../Inputs/ImageUpload";
 import Counter from "../Inputs/Counter";
 import CheckBox from "../Inputs/CheckBox";
 import { api } from "~/trpc/react";
-import { PropertyInputType } from "~/types";
+import { ILocation, PropertyInputType } from "~/types";
 import { useUser } from "@clerk/nextjs";
 
 enum STEPS {
@@ -158,7 +158,7 @@ const RentModal = () => {
     api.amenity.getAll.useQuery();
   // console.log(data);
 
-  const handleLocationSelection = (location: LatLng) => {
+  const handleLocationSelection = (location: ILocation) => {
     setCustomValue("location", location);
   };
 
