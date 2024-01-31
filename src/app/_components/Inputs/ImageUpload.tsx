@@ -3,6 +3,15 @@ import { CldUploadWidget } from "next-cloudinary";
 import { TbPhotoPlus } from "react-icons/tb";
 import Image from "next/image";
 
+interface CldUploadWidgetInfo {
+  secure_url: string;
+}
+
+interface CldUploadWidgetResults {
+  event?: string;
+  info?: string | CldUploadWidgetInfo;
+}
+
 type ImageUploadProps = {
   onChange: (value: string) => void;
   value?: string;
@@ -11,8 +20,10 @@ const uploadPreset = "kbkegw6k";
 
 const ImageUpload = (props: ImageUploadProps) => {
   const handleUpload = useCallback(
-    (result: any) => {
-      props.onChange(result.info.secure_url);
+    (result: CldUploadWidgetResults) => {
+      if (result.info && typeof result.info !== "string") {
+        props.onChange(result.info.secure_url);
+      }
     },
     [props.onChange],
   );
