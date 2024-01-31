@@ -3,6 +3,7 @@ import { createTRPCRouter, publicProcedure } from "../trpc";
 import { TRPCError } from "@trpc/server";
 import { properties, propertyAmenities } from "~/server/db/schema";
 import { createId } from "@paralleldrive/cuid2";
+import { z } from "zod";
 
 export const propertyRouter = createTRPCRouter({
   create: publicProcedure
@@ -71,4 +72,28 @@ export const propertyRouter = createTRPCRouter({
       },
     });
   }),
+
+  getById: publicProcedure
+    .input(z.object({ propertyId: z.string() }))
+    .query(({ ctx, input }) => {
+      return ctx.db.query.properties.findFirst({
+        where: (properties, { eq }) => eq(properties.id, input.propertyId),
+        with: {
+          propertyAmenities: {
+            columns: {
+              propertyId: false,
+              amenityId: false,
+            },
+            with: {
+              amenity: {
+                columns: {
+                  createdAt: false,
+                  updatedAt: false,
+                },
+              },
+            },
+          },
+        },
+      });
+    }),
 });

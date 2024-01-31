@@ -1,5 +1,10 @@
-import React from "react";
+import { api } from "~/trpc/server";
 
-export default function ListingPage() {
+interface IParams {
+  propertyId: string;
+}
+
+export default async function ListingPage({ params }: { params: IParams }) {
+  const property = api.property.getById.query(params);
   return <div>ListingPage</div>;
 }

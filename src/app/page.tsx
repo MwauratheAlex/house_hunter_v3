@@ -16,7 +16,13 @@ export default async function Home() {
           md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6"
         >
           {properties.map((property) => (
-            <ListingCard property={property} />
+            <ListingCard
+              title={property.title}
+              propertyId={property.id}
+              imageSrc={property.imageSrc}
+              price={property.price}
+              type={property.type}
+            />
           ))}
         </div>
       </Container>
