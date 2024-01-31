@@ -13,6 +13,8 @@ import {
   useUser,
 } from "@clerk/nextjs";
 import toast from "react-hot-toast";
+import SignInWrapper from "../SignInWrapper";
+import SignUpWrapper from "../SignUpWrapper";
 
 const UserMenu = () => {
   const user = useUser();
@@ -23,9 +25,6 @@ const UserMenu = () => {
 
   const rentModal = useRentModal();
   const onRent = useCallback(() => {
-    // if (!user.isSignedIn) {
-    //   toast.error("Please sign in to list your property");
-    // }
     rentModal.onOpen();
   }, [rentModal]);
 
@@ -42,13 +41,17 @@ const UserMenu = () => {
           </div>
         </SignedIn>
         <SignedOut>
-          <div
-            onClick={() => toast.error("Please sign in to list your property")}
-            className=" cursor-pointer rounded-full px-4
+          <SignInWrapper>
+            <div
+              onClick={() =>
+                toast.error("Please sign in to list your property")
+              }
+              className=" cursor-pointer rounded-full px-4
             py-3 text-sm font-semibold transition hover:bg-neutral-100"
-          >
-            List your property
-          </div>
+            >
+              List your property
+            </div>
+          </SignInWrapper>
         </SignedOut>
         <div
           className="flex cursor-pointer items-center gap-3 rounded-full 
@@ -81,22 +84,22 @@ const UserMenu = () => {
               className="flex cursor-pointer flex-col px-4 py-3
               font-semibold transition "
             >
-              <SignInButton mode="modal">
+              <SignInWrapper>
                 <div
                   className="cursor-pointer px-4 py-3 font-semibold transition
                   hover:bg-neutral-100"
                 >
                   Sign in
                 </div>
-              </SignInButton>
-              <SignUpButton mode="modal">
+              </SignInWrapper>
+              <SignUpWrapper>
                 <div
                   className="cursor-pointer px-4 py-3 font-semibold transition
                 hover:bg-neutral-100"
                 >
                   Sign up
                 </div>
-              </SignUpButton>
+              </SignUpWrapper>
             </div>
           </SignedOut>
         </nav>
