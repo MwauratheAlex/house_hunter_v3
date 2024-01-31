@@ -22,6 +22,7 @@ export default async function Home() {
               imageSrc={property.imageSrc}
               price={property.price}
               type={property.type}
+              location={property.location}
             />
           ))}
         </div>

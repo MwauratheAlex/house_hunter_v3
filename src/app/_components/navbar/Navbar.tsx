@@ -17,13 +17,11 @@ const Navbar = () => {
           </div>
         </Container>
       </div>
-      <div className="border-b">
+      {/* <div className="border-b">
         <Container>
-          <div className="flex justify-between py-4">
-            <Search />
-          </div>
+          <div className="flex justify-between py-4"><Search /></div>
         </Container>
-      </div>
+      </div> */}
     </div>
   );
 };

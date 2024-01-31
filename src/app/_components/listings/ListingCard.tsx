@@ -3,6 +3,7 @@
 import Image from "next/image";
 import HeartButton from "../HeartButton";
 import { useRouter } from "next/navigation";
+import { ILocation } from "~/types";
 
 type ListingCardProps = {
   propertyId: string;
@@ -10,6 +11,7 @@ type ListingCardProps = {
   title: string;
   price: number;
   type: string;
+  location: ILocation;
 };
 
 const ListingCard = ({
@@ -18,12 +20,13 @@ const ListingCard = ({
   title,
   price,
   type,
+  location,
 }: ListingCardProps) => {
   const router = useRouter();
   return (
     <div
       className="group col-span-1 cursor-pointer "
-      onClick={() => router.push(`/listings/${propertyId}`)}
+      onClick={() => router.push(`/properties/${propertyId}`)}
     >
       <div className="flex w-full flex-col gap-2">
         <div className="relative aspect-square w-full overflow-hidden rounded-xl">
@@ -41,7 +44,7 @@ const ListingCard = ({
           <div className="font-semibold">{title}</div>
           <div className="flex gap-4">
             <div className="text-black/60">{type},</div>
-            <div className="text-black/60">Juja, Kenya</div>
+            <div className="text-black/60">{location.name}</div>
           </div>
           <div className="font-semibold">Ksh.{price} per month</div>
         </div>
