@@ -53,4 +53,24 @@ export const propertyRouter = createTRPCRouter({
         }),
       );
     }),
+
+  getAll: publicProcedure.query(async ({ ctx }) => {
+    return ctx.db.query.properties.findMany({
+      with: {
+        propertyAmenities: {
+          columns: {
+            propertyId: false,
+            amenityId: false,
+            updatedAt: false,
+            createdAt: false,
+          },
+          with: {
+            amenity: {
+              columns: { createdAt: false, updatedAt: false },
+            },
+          },
+        },
+      },
+    });
+  }),
 });

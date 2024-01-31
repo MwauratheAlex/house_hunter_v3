@@ -16,6 +16,8 @@ import ListingCard from "./_components/ListingCard";
 export default async function Home() {
   noStore();
   const hello = await api.post.hello.query({ text: "from tRPC" });
+  const properties = await api.property.getAll.query();
+  properties.map((property) => console.log(property.propertyAmenities));
 
   return (
     <main>

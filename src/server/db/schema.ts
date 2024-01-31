@@ -60,8 +60,9 @@ export const properties = createTable("property", {
   type: mysqlEnum("type", ["apartment", "house", "single-room", "bedsitter"]),
 });
 
-export const propertyRelations = relations(properties, ({ one }) => ({
+export const propertyRelations = relations(properties, ({ one, many }) => ({
   user: one(users, { fields: [properties.userId], references: [users.id] }),
+  propertyAmenities: many(propertyAmenities),
 }));
 
 export const amenities = createTable("amenity", {
@@ -75,6 +76,10 @@ export const amenities = createTable("amenity", {
     .notNull(),
   updatedAt: timestamp("updatedAt").onUpdateNow(),
 });
+
+export const amenityRelations = relations(amenities, ({ many }) => ({
+  propertyAmenities: many(propertyAmenities),
+}));
 
 export const propertyAmenities = createTable(
   "propertyAmenity",
