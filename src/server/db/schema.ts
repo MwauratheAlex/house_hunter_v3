@@ -45,19 +45,24 @@ export const users = createTable("user", {
 
 export const properties = createTable("property", {
   id: varchar("id", { length: 255 }).notNull().primaryKey(),
-  title: varchar("name", { length: 256 }),
+  title: varchar("name", { length: 256 }).notNull(),
   userId: varchar("userId", { length: 255 }).notNull(),
   createdAt: timestamp("created_at")
     .default(sql`CURRENT_TIMESTAMP`)
     .notNull(),
   updatedAt: timestamp("updatedAt").onUpdateNow(),
-  description: varchar("description", { length: 500 }),
+  description: varchar("description", { length: 500 }).notNull(),
   price: int("price").notNull(),
-  roomCount: int("roomCount"),
+  roomCount: int("roomCount").notNull(),
   category: mysqlEnum("category", ["rent", "sale"]).notNull(),
   imageSrc: varchar("imgSrc", { length: 256 }).notNull(),
-  location: json("location").$type<{ lat: number; lng: number }>(),
-  type: mysqlEnum("type", ["apartment", "house", "single-room", "bedsitter"]),
+  location: json("location").$type<{ lat: number; lng: number }>().notNull(),
+  type: mysqlEnum("type", [
+    "apartment",
+    "house",
+    "single-room",
+    "bedsitter",
+  ]).notNull(),
 });
 
 export const propertyRelations = relations(properties, ({ one, many }) => ({
@@ -86,10 +91,6 @@ export const propertyAmenities = createTable(
   {
     propertyId: varchar("propertyId", { length: 255 }).notNull(),
     amenityId: varchar("amenityId", { length: 256 }).notNull(),
-    createdAt: timestamp("created_at")
-      .default(sql`CURRENT_TIMESTAMP`)
-      .notNull(),
-    updatedAt: timestamp("updatedAt").onUpdateNow(),
   },
   (propertyAmenity) => ({
     compoundKey: primaryKey({

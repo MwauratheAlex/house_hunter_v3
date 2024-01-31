@@ -61,8 +61,6 @@ export const propertyRouter = createTRPCRouter({
           columns: {
             propertyId: false,
             amenityId: false,
-            updatedAt: false,
-            createdAt: false,
           },
           with: {
             amenity: {
